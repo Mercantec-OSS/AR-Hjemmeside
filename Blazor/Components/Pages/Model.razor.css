@@ -1,0 +1,116 @@
+﻿body {
+}
+#heroContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+    margin: 0;
+}
+
+.PageContainer {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 0;
+}
+
+.cardContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: max-content;
+    width: max-content;
+    background-color: rgb(255, 255, 255);
+}
+
+.imaged {
+    height: 700px;
+    width: max-content;
+}
+
+.imagedContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.textContainer {
+    font-size: 50px;
+    display: flex;
+}
+
+.decriptionContainer {
+    display: flex;
+    flex-direction: column;
+    width: 1000px;
+}
+
+.uploader {
+    display: flex;
+    align-items: center;
+}
+
+#uploaderName {
+    font-size: 30px;
+}
+
+.uploader img {
+    height: 150px;
+}
+
+.modelButton {
+    background-color: #006eff;
+    margin-bottom: 10px;
+    border: none;
+    width: 200px;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.decription {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+
+@media only screen and (max-width: 800px) {
+    body {
+        .cardContainer
+
+{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: max-content;
+    width: max-content;
+    background-color: rgb(255, 255, 255);
+}
+
+.imaged {
+    height: 230px;
+    width: max-content;
+}
+
+.imagedContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.textContainer {
+    font-size: 30px;
+    display: flex;
+}
+
+}
+}
+
