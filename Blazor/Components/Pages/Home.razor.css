@@ -1,0 +1,42 @@
+﻿body {
+}
+
+.PageContainer {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin: 0;
+}
+
+.cardContainer {
+    height: 250px;
+    width: 250px;
+    background-color: rgb(255, 255, 255);
+    border: solid;
+    border-color: black;
+    border-radius: 3%;
+}
+
+.imaged {
+    height: 200px;
+    width: 245px;
+    border-bottom: solid;
+}
+
+.imagedContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.textContainer {
+    font-size: 20px;
+    display: flex;
+}
+
+.cardContainer:hover {
+    cursor: pointer;
+    transition: 0.5s;
+    transform: scale(1.1);
+}
