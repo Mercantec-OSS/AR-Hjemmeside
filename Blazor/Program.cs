@@ -1,4 +1,5 @@
 using Blazor.Components;
+using Blazor.Data;
 
 namespace Blazor
 {
@@ -11,8 +12,10 @@ namespace Blazor
             // Add services to the container.
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
+            builder.Services.AddSingleton<AppDbContext>();
 
-            var app = builder.Build();
+
+			var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
