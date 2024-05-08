@@ -1,11 +1,12 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Runtime.InteropServices;
 
 namespace Blazor.Models
 {
     public class Users
     {
-
-        public int Id { get; set; }
+		[Key]
+		public int Id { get; set; }
 
         public string? Name { get; set; }
 

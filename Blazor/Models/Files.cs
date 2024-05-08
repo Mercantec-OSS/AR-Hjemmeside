@@ -1,8 +1,11 @@
-﻿namespace Blazor.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Blazor.Models
 {
     public class Files
     {
-        public int file_id { get; set; }
+		[Key]
+		public int file_id { get; set; }
 
         public int model_id { get; set;}
 

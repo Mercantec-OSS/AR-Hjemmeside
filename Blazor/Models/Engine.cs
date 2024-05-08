@@ -1,11 +1,13 @@
 ﻿using static System.Runtime.CompilerServices.RuntimeHelpers;
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Blazor.Models
 {
     public class _3DModels
     {
-            public string? object_name { get; set; }
+		[Key]
+		public string? object_name { get; set; }
 
             public int subject_id { get; set; }
 

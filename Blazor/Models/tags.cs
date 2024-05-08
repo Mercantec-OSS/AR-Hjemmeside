@@ -1,8 +1,11 @@
-﻿namespace Blazor.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Blazor.Models
 {
     public class tags
     {
-        public int id { get; set; }
+		[Key]
+		public int id { get; set; }
 
         public string? tag_name { get; set; }
     }
