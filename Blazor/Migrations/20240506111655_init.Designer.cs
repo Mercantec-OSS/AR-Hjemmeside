@@ -12,7 +12,7 @@ namespace Blazor.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20240506111655_init")]
-    partial class init
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

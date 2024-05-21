@@ -18,7 +18,7 @@ namespace Blazor.Data
 			optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DbConnection"));
 		}
 		public DbSet<Users> Users { get; set; }
-		public DbSet<tags> Tags { get; set; }
+		public DbSet<Tags> Tags { get; set; }
 		public DbSet<Categories> Category { get; set; }
 		public DbSet<Files> File { get; set; }
 		public DbSet<model_tags> Model_Tag { get; set; }

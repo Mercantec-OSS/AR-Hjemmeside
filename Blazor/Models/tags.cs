@@ -2,7 +2,7 @@
 
 namespace Blazor.Models
 {
-    public class tags
+    public class Tags
     {
 		[Key]
 		public int id { get; set; }
