@@ -6,7 +6,7 @@
 
 <h1>Upload Test</h1>
 
-<EditForm Model="newUser" OnInvalidSubmit="SubmitForm">
+<EditForm Model="newUser" OnValidSubmit="SubmitForm">
     <div>
         <label for="firstName"> Fornavn: </label>
         <InputText id="firstName" class ="form-control" @bind-Value="newUser.FirstName" />
