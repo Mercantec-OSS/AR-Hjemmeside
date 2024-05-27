@@ -1,6 +1,9 @@
 ﻿@page "/"
+@using ARClassLibrary;
 @using Blazor.Models;
+@inject ISqlDataAccess sql
 @inject IConfiguration config
+
 
 <PageTitle>Upload Test</PageTitle>
 
@@ -38,17 +41,24 @@
 
 @code {
     private long maxFileSize = 1024 * 1024 * 50; // 50 MB max fil størrelse, det sidste nummer er til at ændre MB
-    private int maxAllowedFiles = 3; // max nummer af filer der kan uploades pr. person
     private List<string> errors = new();
     private Users newUser = new ();
     private IBrowserFile? file;
 
     private async Task SubmitForm()
     {
+        errors.Clear();
+
         try
         {
             string relativePath = await CaptureFile();
             newUser.FileName = relativePath;
+
+            await sql.SaveData("dbo.spUsers_Insert", "DbConnection", newUser);
+
+            newUser = new();
+            file = null;
+            errors.Clear();
         }
         catch (Exception ex)
         {

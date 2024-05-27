@@ -1,3 +1,4 @@
+using ARClassLibrary;
 using Blazor.Components;
 using Blazor.Data;
 
@@ -13,6 +14,7 @@ namespace Blazor
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
             builder.Services.AddSingleton<AppDbContext>();
+            builder.Services.AddSingleton<ISqlDataAccess, SqlDataAccess>();
 
 
 			var app = builder.Build();

@@ -25,4 +25,8 @@
     <Folder Include="Controllers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ARClassLibrary\ARClassLibrary.csproj" />
+  </ItemGroup>
+
 </Project>
