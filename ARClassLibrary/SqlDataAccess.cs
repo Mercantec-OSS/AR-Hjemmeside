@@ -12,6 +12,23 @@ public class SqlDataAccess : ISqlDataAccess
         _config = config;
     }
 
+    public async Task<List<T>> LoadData<T>(
+        string storedProc,
+        string connectionName,
+        object parameters)
+    {
+        string connectionString = _config.GetConnectionString(connectionName)
+                ?? throw new Exception($"Missing connection string at {connectionName}");
+
+        using var connection = new SqlConnection(connectionString);
+
+        var rows = await connection.QueryAsync<T>(
+            storedProc,
+            parameters,
+            commandType: System.Data.CommandType.StoredProcedure);
+
+        return rows.ToList();
+    } 
     public async Task SaveData(
         string storedProc,
         string connectionName,

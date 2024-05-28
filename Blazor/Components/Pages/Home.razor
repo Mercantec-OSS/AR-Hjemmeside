@@ -3,6 +3,7 @@
 @using Blazor.Models;
 @inject ISqlDataAccess sql
 @inject IConfiguration config
+@inject IJSRuntime JSRuntime
 
 
 <PageTitle>Upload Test</PageTitle>
@@ -39,11 +40,89 @@
     </ul>
 }
 
+@if (users is not null)
+{
+    <h2>Eksisterende Brugere</h2>
+    <table class="table table-bordered ">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Password</th>
+                <th>Role</th>
+                <th>Picture</th>
+                <th>FileName</th>
+                <th>UserName</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var c in users)
+            {
+                <tr>
+                    <td>@c.Id</td>
+                    <td>@c.FirstName</td>
+                    <td>@c.LastName</td>
+                    <td>@c.Email</td>
+                    <td>@c.Password</td>
+                    <td>@c.Role</td>
+                    <td>@if (string.IsNullOrWhiteSpace(c.FileName) == false)
+                        {
+                            var extension = Path.GetExtension(c.FileName);
+                            if (extension == ".glb")
+                            {
+                                <model-viewer src="@CreateWebPath(c.FileName)" alt="A 3D model of something" auto-rotate camera-controls width="400"></model-viewer>
+
+                            }
+                            else if (extension == ".png" || extension == ".jpg" || extension == ".jpeg")
+                            {
+                                <img src="@CreateWebPath(c.FileName)" width="400" />
+                            }
+                        }
+                    </td>
+                    <td>@c.FileName</td>
+                    <td>@c.UserName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
 @code {
     private long maxFileSize = 1024 * 1024 * 50; // 50 MB max fil størrelse, det sidste nummer er til at ændre MB
     private List<string> errors = new();
     private Users newUser = new ();
     private IBrowserFile? file;
+    private List<Users>? users;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("import", "https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js");
+        }
+    }
+
+    private async Task LoadUsers()
+    {
+        users = await sql.LoadData<Users>(
+            "dbo.spUsers_GetAll",
+            "DbConnection",
+            null);
+    }
+
+    
+
+    private string CreateWebPath(string relativePath)
+    {
+        return Path.Combine(config.GetValue<string>("WebStorageRoot")!, relativePath);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadUsers();
+    }
 
     private async Task SubmitForm()
     {
@@ -59,6 +138,8 @@
             newUser = new();
             file = null;
             errors.Clear();
+
+            await LoadUsers();
         }
         catch (Exception ex)
         {
