@@ -77,7 +77,9 @@
                             }
                             else if (extension == ".glb")
                             {
-                                <model-viewer src="@CreateWebPath(c.FileName)" camera-controls></model-viewer>
+                                var webPath = "/ProfileImages/Test/pistol.glb";
+                                <p>GLB Path: @webPath</p> <!-- Debug output -->
+                                <model-viewer src="https://hotel.magsapi.com/Avocado.glb" camera-controls></model-viewer>
                             }
                         }
                     </td>
