@@ -1,5 +1,5 @@
 ﻿@page "/counter"
-
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
 <PageTitle>Counter</PageTitle>
 
 <h1>Counter</h1>
@@ -8,6 +8,7 @@
 
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
+
 @code {
     private int currentCount = 0;
 
@@ -15,4 +16,5 @@
     {
         currentCount++;
     }
+
 }

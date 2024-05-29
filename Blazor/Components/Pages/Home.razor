@@ -5,7 +5,7 @@
 @inject IConfiguration config
 @inject IJSRuntime JSRuntime
 
-
+<model-viewer src="https://modelviewer.dev/shared-assets/models/Astronaut.glb" camera-controls></model-viewer>
 <PageTitle>Upload Test</PageTitle>
 
 <h1>Upload Test</h1>
@@ -43,7 +43,7 @@
 @if (users is not null)
 {
     <h2>Eksisterende Brugere</h2>
-    <table class="table table-bordered ">
+    <table class="table width: 100%; table-layout: auto; ">
         <thead>
             <tr>
                 <th>Id</th>
@@ -67,17 +67,17 @@
                     <td>@c.Email</td>
                     <td>@c.Password</td>
                     <td>@c.Role</td>
-                    <td>@if (string.IsNullOrWhiteSpace(c.FileName) == false)
+                    <td>
+                        @if (string.IsNullOrWhiteSpace(c.FileName) == false)
                         {
                             var extension = Path.GetExtension(c.FileName);
-                            if (extension == ".glb")
-                            {
-                                <model-viewer src="@CreateWebPath(c.FileName)" alt="A 3D model of something" auto-rotate camera-controls width="400"></model-viewer>
-
-                            }
-                            else if (extension == ".png" || extension == ".jpg" || extension == ".jpeg")
+                            if (extension == ".png" || extension == ".jpg" || extension == ".jpeg")
                             {
                                 <img src="@CreateWebPath(c.FileName)" width="400" />
+                            }
+                            else if (extension == ".glb")
+                            {
+                                <model-viewer src="@CreateWebPath(c.FileName)" camera-controls></model-viewer>
                             }
                         }
                     </td>
@@ -89,6 +89,8 @@
     </table>
 }
 
+
+
 @code {
     private long maxFileSize = 1024 * 1024 * 50; // 50 MB max fil størrelse, det sidste nummer er til at ændre MB
     private List<string> errors = new();
@@ -96,13 +98,6 @@
     private IBrowserFile? file;
     private List<Users>? users;
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            await JSRuntime.InvokeVoidAsync("import", "https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js");
-        }
-    }
 
     private async Task LoadUsers()
     {
@@ -111,7 +106,13 @@
             "DbConnection",
             null);
     }
-
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("import", "https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js");
+    }
+    }
     private string CreateWebPath(string relativePath)
     {
         return Path.Combine(config.GetValue<string>("WebStorageRoot")!, relativePath);
