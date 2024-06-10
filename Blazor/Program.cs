@@ -1,6 +1,12 @@
+using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Blazor.Data;
+using Microsoft.EntityFrameworkCore;
 using ARClassLibrary;
 using Blazor.Components;
-using Blazor.Data;
 
 namespace Blazor
 {
@@ -11,31 +17,54 @@ namespace Blazor
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddRazorComponents()
-                .AddInteractiveServerComponents();
-            builder.Services.AddSingleton<AppDbContext>();
+            builder.Services.AddRazorComponents().AddInteractiveServerComponents();
+            builder.Services.AddControllers();
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "ArWeb", Version = "v1" });
+            });
+
+            builder.Services.AddDbContext<AppDbContext>(options =>
+            {
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DbConnection"));
+            });
+
+            // Register ISqlDataAccess with its implementation
             builder.Services.AddSingleton<ISqlDataAccess, SqlDataAccess>();
 
-
-			var app = builder.Build();
+            var app = builder.Build();
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
             app.UseHttpsRedirection();
-
             app.UseStaticFiles();
-            app.UseAntiforgery();
 
-            app.MapRazorComponents<App>()
-                .AddInteractiveServerRenderMode();
+            app.UseRouting();
+
+            // Ensure antiforgery middleware is placed correctly
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.UseAntiforgery(); // This line is crucial
+
+            app.UseSwagger(); // Enable middleware to serve generated Swagger as a JSON endpoint.
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "ArWeb v1");
+            });
+
+            app.MapControllers(); // Ensure controllers are mapped.
+
+            app.MapRazorComponents<App>().AddInteractiveServerRenderMode();
 
             app.Run();
         }
     }
 }
+
+

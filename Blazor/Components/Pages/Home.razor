@@ -5,12 +5,17 @@
 @inject IConfiguration config
 @inject IJSRuntime JSRuntime
 
-<model-viewer src="https://modelviewer.dev/shared-assets/models/Astronaut.glb" camera-controls></model-viewer>
+
 <PageTitle>Upload Test</PageTitle>
 
 <h1>Upload Test</h1>
 
 <EditForm Model="newUser" OnValidSubmit="SubmitForm">
+    <div>
+        <label for="userName"> BrugerNavn: </label>
+        <InputText id="username" class="form-control" @bind-Value="newUser.UserName" />
+
+    </div>
     <div>
         <label for="firstName"> Fornavn: </label>
         <InputText id="firstName" class ="form-control" @bind-Value="newUser.FirstName" />
@@ -73,13 +78,13 @@
                             var extension = Path.GetExtension(c.FileName);
                             if (extension == ".png" || extension == ".jpg" || extension == ".jpeg")
                             {
-                                <img src="@CreateWebPath(c.FileName)" width="400" />
+                                <img src="@CreateWebPath(c.FileName)"/>
                             }
                             else if (extension == ".glb")
                             {
-                                var webPath = "/ProfileImages/Test/pistol.glb";
+                                var webPath = CreateWebPath(c.FileName);
                                 <p>GLB Path: @webPath</p> <!-- Debug output -->
-                                <model-viewer src="https://hotel.magsapi.com/Avocado.glb" camera-controls></model-viewer>
+                                <model-viewer src="@webPath" camera-controls style="width: 100%; height: 100%;"></model-viewer>
                             }
                         }
                     </td>

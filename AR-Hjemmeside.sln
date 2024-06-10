@@ -5,7 +5,7 @@ VisualStudioVersion = 17.8.34511.84
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor", "Blazor\Blazor.csproj", "{34593A71-DD3E-4D6F-92FB-D8DC30BED538}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ARClassLibrary", "ARClassLibrary\ARClassLibrary.csproj", "{89769095-EF35-4254-8354-E08D23CBA94F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ARClassLibrary", "ARClassLibrary\ARClassLibrary.csproj", "{89769095-EF35-4254-8354-E08D23CBA94F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -8,7 +8,7 @@ namespace Blazor.Models
 		[Key]
 		public int Id { get; set; }
 
-        public string UserName { get; set; } = "Test";
+        public string UserName { get; set; }
 
         public string? FirstName { get; set; }
 
