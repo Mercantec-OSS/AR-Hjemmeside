@@ -1,6 +1,6 @@
 ﻿namespace Blazor.Models
 {
-    public class Subject
+    public class Subjects
     {
         public int subject_id { get; set; }
 
