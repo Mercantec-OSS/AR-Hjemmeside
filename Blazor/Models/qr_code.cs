@@ -1,6 +1,6 @@
 ﻿namespace Blazor.Models
 {
-    public class QRCode
+    public class qr_code
     {
         public int id { get; set; }
 

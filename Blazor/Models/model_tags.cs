@@ -1,6 +1,6 @@
 ﻿namespace Blazor.Models
 {
-    public class ModelTags
+    public class model_tags
     {
         public int model_id { get; set; }
 
