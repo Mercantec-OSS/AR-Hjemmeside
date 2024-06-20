@@ -17,6 +17,8 @@ namespace Blazor.Data
 		{
 			optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DbConnection"));
 		}
+
+		public DbSet<_3DModels> ThreeDModels { get; set; }
 		public DbSet<Users> Users { get; set; }
 		public DbSet<Tags> Tags { get; set; }
 		public DbSet<Categories> Category { get; set; }
