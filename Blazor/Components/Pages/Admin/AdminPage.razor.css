@@ -1,2 +1,4 @@
-﻿body {
+﻿.userTable {
+    display: flex;
+    width: 100%;
 }
