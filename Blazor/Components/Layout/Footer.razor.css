@@ -1,0 +1,11 @@
+﻿.footerContainer {
+    background-color: #0085ff;
+    height: 100px;
+}
+
+.footerStyle {
+    background-color: #0085ff;
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+}
