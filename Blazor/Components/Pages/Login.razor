@@ -1,27 +1,71 @@
-﻿@page "/Login"
-
+﻿@page "/login"
+@using ARClassLibrary
+@using Blazor.Models
+@inject ISqlDataAccess sql
+@inject IConfiguration config
+@inject NavigationManager NavigationManager
+@inject AuthenticationService authService
 <PageTitle>Login</PageTitle>
 
-<h1>Login Kachigga</h1>
+<h1>Login</h1>
 
-<form>
-    <!-- Email input -->
-    <div data-mdb-input-init class="form-outline mb-4">
-        <input type="email" id="form2Example1" class="form-control" />
-        <label class="form-label" for="form2Example1">Email address</label>
+<EditForm Model="loginModel" OnValidSubmit="SubmitForm">
+    <div>
+        <label for="username">Username:</label>
+        <InputText id="username" class="form-control" @bind-Value="loginModel.UserName" />
     </div>
-
-    <!-- Password input -->
-    <div data-mdb-input-init class="form-outline mb-4">
-        <input type="password" id="form2Example2" class="form-control" />
-        <label class="form-label" for="form2Example2">Password</label>
+    <div>
+        <label for="password">Password:</label>
+        <InputText id="password" class="form-control" @bind-Value="loginModel.Password" type="password" />
     </div>
+    <button type="submit" class="btn btn-primary">Login</button>
+</EditForm>
 
-    <!-- Submit button -->
-    <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">Log Ind</button>
-
-</form>
+@if (errors.Count > 0)
+{
+    <h2>Errors</h2>
+    <ul class="text-danger">
+        @foreach (var error in errors)
+        {
+            <li>@error</li>
+        }
+    </ul>
+}
 
 @code {
+    private List<string> errors = new();
+    private LoginModel loginModel = new();
 
+    private async Task SubmitForm()
+    {
+        errors.Clear();
+
+        try
+        {
+            // Authenticate the user. This is a placeholder for your authentication logic.
+            bool isAuthenticated = await authService.AuthenticateUser(loginModel.UserName, loginModel.Password);
+
+            if (isAuthenticated)
+            {
+                // Redirect to a different page upon successful login. Adjust the URL as needed.
+                NavigationManager.NavigateTo("/");
+            }
+            else
+            {
+                errors.Add("Invalid username or password.");
+            }
+        }
+        catch (Exception ex)
+        {
+            errors.Add($"Error: {ex.Message}");
+        }
+    }
+
+    private async Task<bool> AuthenticateUser(string userName, string password)
+    {
+        // Implement your authentication logic here.
+        // This could involve checking the username and password against a database.
+        // For demonstration, this always returns false.
+        return false;
+    }
 }

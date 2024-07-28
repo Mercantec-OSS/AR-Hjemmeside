@@ -1,40 +1,139 @@
 ﻿@page "/CreateUser"
+@using ARClassLibrary;
+@using Blazor.Models;
+@inject ISqlDataAccess sql
+@inject IConfiguration config
+@inject IJSRuntime JSRuntime
 
-<PageTitle>Create User</PageTitle>
+<PageTitle>Upload Test</PageTitle>
 
-<h1>Create User</h1>
+<h1>Upload Test</h1>
 
-<form>
-    <!-- Email input -->
-    <div data-mdb-input-init class="form-outline mb-4">
-        <input type="email" id="form2Example1" class="form-control" />
-        <label class="form-label" for="form2Example1">Email address</label>
+<EditForm Model="newUser" OnValidSubmit="SubmitForm">
+    <div>
+        <label for="userName"> BrugerNavn: </label>
+        <InputText id="username" class="form-control" @bind-Value="newUser.UserName" />
     </div>
-
-    <!-- Name input -->
-    <div data-mdb-input-init class="form-outline mb-4">
-        <input type="email" id="form2Example1" class="form-control" />
-        <label class="form-label" for="form2Example1">Name</label>
+    <div>
+        <label for="firstName"> Fornavn: </label>
+        <InputText id="firstName" class="form-control" @bind-Value="newUser.FirstName" />
     </div>
-
-    <!-- Password input -->
-    <div data-mdb-input-init class="form-outline mb-4">
-        <input type="password" id="form2Example2" class="form-control" />
-        <label class="form-label" for="form2Example2">Password</label>
+    <div>
+        <label for="lastName"> Efternavn: </label>
+        <InputText id="lastName" class="form-control" @bind-Value="newUser.LastName" />
     </div>
-
-    <!-- Role selection -->
-    <div data-mdb-input-init class="form-outline mb-4">
-        <select>
-            <option>Underviser</option>
-            <option>Admin</option>
-        </select>
+    <div>
+        <label for="password"> Password: </label>
+        <InputText id="password" class="form-control" @bind-Value="newUser.Password" />
     </div>
+    <div>
+        <label for="profilePicture"> Profil Billede: </label>
+        <InputFile OnChange="@LoadFiles" class="form-control" accept=".png,.jpg,.jpeg,.glb" />
+    </div>
+    <button class="btn btn-primary mt-3" type="submit"> Opret Profil </button>
+</EditForm>
 
-    <!-- Submit button -->
-    <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-block mb-4">Confirm</button>
-</form>
+@if (errors.Count > 0)
+{
+    <h2>Errors</h2>
+    <ul class="text-danger">
+        @foreach (var error in errors)
+        {
+            <li>@error</li>
+        }
+    </ul>
+}
 
 @code {
+    private long maxFileSize = 1024 * 1024 * 50; // 50 MB max fil størrelse, det sidste nummer er til at ændre MB
+    private List<string> errors = new();
+    private Users newUser = new();
+    private IBrowserFile? file;
+    private List<Users>? users;
+
+
+    private async Task LoadUsers()
+    {
+        users = await sql.LoadData<Users>(
+            "dbo.spUsers_GetAll",
+            "DbConnection",
+            null);
+    }
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JSRuntime.InvokeVoidAsync("import", "https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js");
+        }
+    }
+    private string CreateWebPath(string relativePath)
+    {
+        return Path.Combine(config.GetValue<string>("WebStorageRoot")!, relativePath);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadUsers();
+    }
+
+    private async Task SubmitForm()
+    {
+        errors.Clear();
+
+        try
+        {
+            string relativePath = await CaptureFile();
+            newUser.FileName = relativePath;
+
+            await sql.SaveData("dbo.spUsers_Insert", "DbConnection", newUser);
+
+            newUser = new();
+            file = null;
+            errors.Clear();
+
+            await LoadUsers();
+        }
+        catch (Exception ex)
+        {
+            errors.Add($"Error: {ex.Message}");
+        }
+    }
+
+    private void LoadFiles(InputFileChangeEventArgs e)
+    {
+        file = e.File;
+    }
+
+    private async Task<string> CaptureFile()
+    {
+        if (file is null)
+        {
+            return "";
+        }
+
+        try
+        {
+            string newFileName = Path.ChangeExtension(
+                Path.GetRandomFileName(),
+                Path.GetExtension(file.Name));
+
+            string path = Path.Combine(config.GetValue<string>("FileStorage")!, "Test", newFileName);
+
+            string relativePath = Path.Combine("Test", newFileName);
+
+            Directory.CreateDirectory(Path.Combine(config.GetValue<string>("FileStorage")!, "Test"));
+
+            await using FileStream fs = new(path, FileMode.Create);
+            await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+
+            return relativePath;
+        }
+        catch (Exception ex)
+        {
+            errors.Add($"Error with file {file.Name} Error: {ex.Message}");
+            throw;
+        }
+
+    }
 
 }
