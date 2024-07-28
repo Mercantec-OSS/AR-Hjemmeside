@@ -10,6 +10,9 @@
 <h1>Login</h1>
 
 <EditForm Model="loginModel" OnValidSubmit="SubmitForm">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
     <div>
         <label for="username">Username:</label>
         <InputText id="username" class="form-control" @bind-Value="loginModel.UserName" />
@@ -42,12 +45,10 @@
 
         try
         {
-            // Authenticate the user. This is a placeholder for your authentication logic.
-            bool isAuthenticated = await authService.AuthenticateUser(loginModel.UserName, loginModel.Password);
+            bool isAuthenticated = await AuthenticateUser(loginModel.UserName, loginModel.Password);
 
             if (isAuthenticated)
             {
-                // Redirect to a different page upon successful login. Adjust the URL as needed.
                 NavigationManager.NavigateTo("/");
             }
             else
@@ -63,9 +64,47 @@
 
     private async Task<bool> AuthenticateUser(string userName, string password)
     {
-        // Implement your authentication logic here.
-        // This could involve checking the username and password against a database.
-        // For demonstration, this always returns false.
-        return false;
+        // Check if sql is not null
+        if (sql == null)
+        {
+            throw new ArgumentNullException(nameof(sql), "The sql data access object cannot be null.");
+        }
+
+        // Retrieve the user from the database
+        var user = await sql.GetUserByUsername(userName).ConfigureAwait(false);
+
+        // Check if user exists and if the provided password matches the stored hashed password
+        if (user != null && VerifyPassword(password, user.PasswordHash, user.PasswordSalt))
+        {
+            return true; // Authentication successful
+        }
+
+        return false; // Authentication failed
+    }
+
+    // Assuming a method to verify the hashed password
+    private bool VerifyPassword(string password, string? storedHash, string? storedSalt)
+    {
+        if (storedHash == null || storedSalt == null)
+        {
+            return false;
+        }
+
+        string hashedPassword = HashPasswordWithSalt(password, storedSalt);
+        return hashedPassword == storedHash;
+    }
+
+    // Example of hashing password with salt
+    private string HashPasswordWithSalt(string password, string salt)
+    {
+        using (var sha256 = SHA256.Create())
+        {
+            byte[] saltedPasswordBytes = Encoding.UTF8.GetBytes(password + salt);
+            byte[] hashBytes = sha256.ComputeHash(saltedPasswordBytes);
+            return Convert.ToBase64String(hashBytes);
+        }
     }
 }
+
+
+ 
