@@ -1,4 +1,4 @@
-﻿
+﻿using Models;
 namespace ARClassLibrary
 {
     public interface ISqlDataAccess

@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Blazor.Models; // Ensure this namespace includes the Users model
+using Models; // Ensure this namespace includes the Users model
 
 namespace ARClassLibrary
 {

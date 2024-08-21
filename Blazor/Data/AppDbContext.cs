@@ -1,4 +1,4 @@
-﻿using Blazor.Models;
+﻿using Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 

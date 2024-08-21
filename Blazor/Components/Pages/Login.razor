@@ -1,6 +1,8 @@
 ﻿@page "/login"
 @using ARClassLibrary
-@using Blazor.Models
+@using Models;
+@using System.Text
+@using System.Security.Cryptography
 @inject ISqlDataAccess sql
 @inject IConfiguration config
 @inject NavigationManager NavigationManager
@@ -74,7 +76,7 @@
         var user = await sql.GetUserByUsername(userName).ConfigureAwait(false);
 
         // Check if user exists and if the provided password matches the stored hashed password
-        if (user != null && VerifyPassword(password, user.PasswordHash, user.PasswordSalt))
+        if (user != null && VerifyPassword(password, user.Password, user.PasswordSalt))
         {
             return true; // Authentication successful
         }
