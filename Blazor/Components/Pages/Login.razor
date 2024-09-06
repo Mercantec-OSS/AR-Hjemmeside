@@ -11,102 +11,18 @@
 
 <h1>Login</h1>
 
-<EditForm Model="loginModel" OnValidSubmit="SubmitForm">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
-
+<EditForm Model="userDTO" OnValidSubmit="UserLogin">
     <div>
-        <label for="username">Username:</label>
-        <InputText id="username" class="form-control" @bind-Value="loginModel.UserName" />
+        <label for="userName"> Brugernavn: </label>
+        <InputText id="username" class="form-control" @bind-Value="userDTO.UserName" />
     </div>
     <div>
-        <label for="password">Password:</label>
-        <InputText id="password" class="form-control" @bind-Value="loginModel.Password" type="password" />
+        <label for="password"> Password: </label>
+        <InputText id="password" class="form-control" @bind-Value="userDTO.Password" />
     </div>
-    <button type="submit" class="btn btn-primary">Login</button>
+    <button class="btn btn-primary mt-3" type="submit"> Login </button>
 </EditForm>
 
-@if (errors.Count > 0)
-{
-    <h2>Errors</h2>
-    <ul class="text-danger">
-        @foreach (var error in errors)
-        {
-            <li>@error</li>
-        }
-    </ul>
-}
-
-@code {
-    private List<string> errors = new();
-    private LoginModel loginModel = new();
-
-    private async Task SubmitForm()
-    {
-        errors.Clear();
-
-        try
-        {
-            bool isAuthenticated = await AuthenticateUser(loginModel.UserName, loginModel.Password);
-
-            if (isAuthenticated)
-            {
-                NavigationManager.NavigateTo("/");
-            }
-            else
-            {
-                errors.Add("Invalid username or password.");
-            }
-        }
-        catch (Exception ex)
-        {
-            errors.Add($"Error: {ex.Message}");
-        }
-    }
-
-    private async Task<bool> AuthenticateUser(string userName, string password)
-    {
-        // Check if sql is not null
-        if (sql == null)
-        {
-            throw new ArgumentNullException(nameof(sql), "The sql data access object cannot be null.");
-        }
-
-        // Retrieve the user from the database
-        var user = await sql.GetUserByUsername(userName).ConfigureAwait(false);
-
-        // Check if user exists and if the provided password matches the stored hashed password
-        if (user != null && VerifyPassword(password, user.Password, user.PasswordSalt))
-        {
-            return true; // Authentication successful
-        }
-
-        return false; // Authentication failed
-    }
-
-    // Assuming a method to verify the hashed password
-    private bool VerifyPassword(string password, string? storedHash, string? storedSalt)
-    {
-        if (storedHash == null || storedSalt == null)
-        {
-            return false;
-        }
-
-        string hashedPassword = HashPasswordWithSalt(password, storedSalt);
-        return hashedPassword == storedHash;
-    }
-
-    // Example of hashing password with salt
-    private string HashPasswordWithSalt(string password, string salt)
-    {
-        using (var sha256 = SHA256.Create())
-        {
-            byte[] saltedPasswordBytes = Encoding.UTF8.GetBytes(password + salt);
-            byte[] hashBytes = sha256.ComputeHash(saltedPasswordBytes);
-            return Convert.ToBase64String(hashBytes);
-        }
-    }
-}
 
 
  

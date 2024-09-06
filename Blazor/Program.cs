@@ -7,6 +7,8 @@ using Blazor.Data;
 using Microsoft.EntityFrameworkCore;
 using ARClassLibrary;
 using Blazor.Components;
+using Blazor.Repository;
+using Blazored.LocalStorage;
 
 namespace Blazor
 {
@@ -19,6 +21,8 @@ namespace Blazor
             // Add services to the container.
             builder.Services.AddRazorComponents().AddInteractiveServerComponents();
             builder.Services.AddScoped<AuthenticationService>();
+            builder.Services.AddBlazoredLocalStorage();
+            builder.Services.AddScoped<UserRepo>();
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(c =>

@@ -15,7 +15,7 @@ namespace DatabaseLayer
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(Configuration.GetConnectionString("DbConnection"));
+            optionsBuilder.UseSqlServer("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=ARWeb;Integrated Security=True;");
         }
 
         public DbSet<_3DModels> ThreeDModels { get; set; }

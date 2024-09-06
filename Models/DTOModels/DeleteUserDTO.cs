@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Models
+namespace Models.DTOModels
 {
-    public class UsersDTO
+    public class DeleteUserDTO
     {
         public string UserName { get; set; }
 
-        public string Password { get; set; }
+        public string Email { get; set; }
     }
 }
