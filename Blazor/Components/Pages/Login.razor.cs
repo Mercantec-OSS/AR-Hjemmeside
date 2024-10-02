@@ -1,6 +1,8 @@
 ﻿using Blazor.Repository;
 using Microsoft.AspNetCore.Components;
 using Models.DTOModels;
+using Newtonsoft.Json;
+using System.Text;
 
 
 namespace Blazor.Components.Pages
@@ -15,9 +17,18 @@ namespace Blazor.Components.Pages
 
         public async Task<bool> UserLogin()
         {
-            return await _userRepo.UserLogin(userDTO);
+            using (var client = new HttpClient())
+            {
+                var content = new StringContent(JsonConvert.SerializeObject(userDTO), Encoding.UTF8, "application/json");
+                var response = await client.PostAsync("https://localhost:7013/api/user/login", content);
 
-            
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+                    return false; 
+            }
+
         }
     }
 }
