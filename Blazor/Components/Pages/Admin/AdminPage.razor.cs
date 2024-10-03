@@ -1,24 +1,32 @@
 ﻿using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.JSInterop;
 using Models;
+using Newtonsoft.Json;
 
 namespace Blazor.Components.Pages.Admin
 {
     public partial class AdminPage
     {
-        private long maxFileSize = 1024 * 1024 * 50; // 50 MB max fil størrelse, det sidste nummer er til at ændre MB
-        private List<string> errors = new();
-        private Users newUser = new();
-        private IBrowserFile? file;
+        //private long maxFileSize = 1024 * 1024 * 50; // 50 MB max fil størrelse, det sidste nummer er til at ændre MB
+        //private List<string> errors = new(); bliver ikke brugt
+        //private Users newUser = new(); bliver ikke brugt i forbindelse med metoden SubmitForm()
+        //private IBrowserFile? file; bliver ikke brugt i forbindelse med metoden SubmitForm()
         private List<Users>? users;
 
 
-        private async Task LoadUsers() //api kald
+        private async Task LoadUsers()
         {
-            users = await sql.LoadData<Users>(
-                "dbo.spUsers_GetAll",
-                "DbConnection",
-                null);
+            using (HttpClient client = new HttpClient())
+            {
+                HttpResponseMessage response = await client.GetAsync("https://localhost:7013/api/user");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string content = await response.Content.ReadAsStringAsync();
+
+                    users = JsonConvert.DeserializeObject<List<Users>>(content);
+                }
+            }
         }
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
@@ -37,64 +45,64 @@ namespace Blazor.Components.Pages.Admin
             await LoadUsers();
         }
 
-        private async Task SubmitForm() //api kald
-        {
-            errors.Clear();
+        //private async Task SubmitForm() //er ikke forbundet til noget
+        //{
+        //    errors.Clear();
 
-            try
-            {
-                string relativePath = await CaptureFile();
-                newUser.FileName = relativePath;
+        //    try
+        //    {
+        //        string relativePath = await CaptureFile();
+        //        newUser.FileName = relativePath;
 
-                await sql.SaveData("dbo.spUsers_Insert", "DbConnection", newUser);
+        //        await sql.SaveData("dbo.spUsers_Insert", "DbConnection", newUser);
 
-                newUser = new();
-                file = null;
-                errors.Clear();
+        //        newUser = new();
+        //        file = null;
+        //        errors.Clear();
 
-                await LoadUsers();
-            }
-            catch (Exception ex)
-            {
-                errors.Add($"Error: {ex.Message}");
-            }
-        }
+        //        await LoadUsers();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        errors.Add($"Error: {ex.Message}");
+        //    }
+        //}
 
-        private void LoadFiles(InputFileChangeEventArgs e)
-        {
-            file = e.File;
-        }
+        //private void LoadFiles(InputFileChangeEventArgs e) bliver ikke brugt i forbindelse med SubmitForm()
+        //{
+        //    file = e.File;
+        //}
 
-        private async Task<string> CaptureFile()
-        {
-            if (file is null)
-            {
-                return "";
-            }
+        //private async Task<string> CaptureFile() bliver ikke brugt i forbindelse med SubmitForm()
+        //{
+        //    if (file is null)
+        //    {
+        //        return "";
+        //    }
 
-            try
-            {
-                string newFileName = Path.ChangeExtension(
-                    Path.GetRandomFileName(),
-                    Path.GetExtension(file.Name));
+        //    try
+        //    {
+        //        string newFileName = Path.ChangeExtension(
+        //            Path.GetRandomFileName(),
+        //            Path.GetExtension(file.Name));
 
-                string path = Path.Combine(config.GetValue<string>("FileStorage")!, "Test", newFileName);
+        //        string path = Path.Combine(config.GetValue<string>("FileStorage")!, "Test", newFileName);
 
-                string relativePath = Path.Combine("Test", newFileName);
+        //        string relativePath = Path.Combine("Test", newFileName);
 
-                Directory.CreateDirectory(Path.Combine(config.GetValue<string>("FileStorage")!, "Test"));
+        //        Directory.CreateDirectory(Path.Combine(config.GetValue<string>("FileStorage")!, "Test"));
 
-                await using FileStream fs = new(path, FileMode.Create);
-                await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
+        //        await using FileStream fs = new(path, FileMode.Create);
+        //        await file.OpenReadStream(maxFileSize).CopyToAsync(fs);
 
-                return relativePath;
-            }
-            catch (Exception ex)
-            {
-                errors.Add($"Error with file {file.Name} Error: {ex.Message}");
-                throw;
-            }
+        //        return relativePath;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        errors.Add($"Error with file {file.Name} Error: {ex.Message}");
+        //        throw;
+        //    }
 
-        }
+        //}
     }
 }

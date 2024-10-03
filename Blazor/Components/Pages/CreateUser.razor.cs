@@ -48,10 +48,10 @@ namespace Blazor.Components.Pages
                 //string relativePath = await CaptureFile();
                 //newUser.FileName = relativePath;
 
-                using (var client = new HttpClient())
+                using (HttpClient client = new HttpClient())
                 {
-                    var content = new StringContent(JsonConvert.SerializeObject(newUser), Encoding.UTF8, "application/json");
-                    var response = await client.PostAsync("https://localhost:7013/api/user/CreateUser", content);
+                    StringContent content = new StringContent(JsonConvert.SerializeObject(newUser), Encoding.UTF8, "application/json");
+                    HttpResponseMessage response = await client.PostAsync("https://localhost:7013/api/user/CreateUser", content);
 
                 }
 
@@ -103,10 +103,6 @@ namespace Blazor.Components.Pages
             }
 
         }
-
-
-
-
 
     }
 }
