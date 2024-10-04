@@ -45,6 +45,21 @@ namespace Blazor.Components.Pages.Admin
             await LoadUsers();
         }
 
+
+
+        private async Task DeleteUser(int id)
+        {
+            using (var client = new HttpClient())
+            {
+                HttpResponseMessage response = await client.DeleteAsync("");
+
+                if (response.IsSuccessStatusCode)
+                {
+                    //kan fx åbne en Dialog eller Toastr
+                }
+            }
+        }
+
         //private async Task SubmitForm() //er ikke forbundet til noget
         //{
         //    errors.Clear();
