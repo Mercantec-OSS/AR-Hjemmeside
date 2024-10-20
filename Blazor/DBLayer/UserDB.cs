@@ -1,4 +1,5 @@
-﻿using Models.DTOModels;
+﻿using Models;
+using Models.DTOModels;
 using NuGet.Protocol;
 
 namespace Blazor.DBLayer
@@ -23,19 +24,45 @@ namespace Blazor.DBLayer
             try
             {
                 HttpResponseMessage response = await _httpClient.PostAsJsonAsync(uri, userDTO);
-                string token = await response.Content.ReadAsStringAsync();
 
-                if (token != null)
+                if (response.IsSuccessStatusCode)
                 {
-                    return token.ToString();
+                    string token = await response.Content.ReadAsStringAsync();
+                    if (token != null)
+                    {
+                        return token.ToString();
+                    }
+
+                    return null;
                 }
             }
-            catch  (Exception)
+            catch
             {
-                throw;
+                return null;
             }
 
             return "";
+        }
+
+        public async Task<bool> CreateUser(Users user)
+        {
+            var uri = $"{_apiRoot}/user/create";
+
+            try
+            {
+                HttpResponseMessage response = await _httpClient.PostAsJsonAsync(uri, user);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+
+                return false;
+            }
+            catch 
+            {
+                return false;
+            }
         }
 
 

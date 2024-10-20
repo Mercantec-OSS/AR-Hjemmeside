@@ -49,6 +49,7 @@ namespace ARwebApi.Controllers
         }
 
         [HttpPost]
+        [Route("create")]
         public async Task<ActionResult<bool>> CreateUserAsync(Users user)
         {
             if (user.UserName == null  || user.Email == null || user.FirstName == null || user.LastName == null || user.Password == null)

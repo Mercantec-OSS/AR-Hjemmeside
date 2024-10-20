@@ -84,6 +84,8 @@ namespace Repository.Repository
                 return false;
             }
 
+            user.Password = PasswordHash.HashPassword(user.Password);
+
             try
             {
                 await _dbContext.AddAsync(user);

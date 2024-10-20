@@ -13,20 +13,16 @@ namespace Blazor.Components.Pages
 
         [Inject]
         private UserRepo _userRepo { get; set; }
+        [Inject]
+        NavigationManager navManager { get; set; }
 
-
-        public async Task<bool> UserLogin()
+        public async Task UserLogin()
         {
-            using (var client = new HttpClient())
-            {
-                var content = new StringContent(JsonConvert.SerializeObject(userDTO), Encoding.UTF8, "application/json");
-                var response = await client.PostAsync("https://localhost:7013/api/user/login", content);
+            var success = await _userRepo.UserLogin(userDTO);
 
-                if (response.IsSuccessStatusCode)
-                {
-                    return true;
-                }
-                    return false; 
+            if (success == true)
+            {
+                navManager.NavigateTo("/");
             }
 
         }

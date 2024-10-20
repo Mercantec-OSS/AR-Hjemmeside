@@ -1,6 +1,7 @@
 ﻿using Blazor.DBLayer;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
+using Models;
 using Models.DTOModels;
 using NuGet.Common;
 
@@ -12,13 +13,11 @@ namespace Blazor.Repository
 
         private readonly ProtectedLocalStorage _storageService;
         private readonly UserDB _userDB;
-        private UsersDTO userDTO;
 
         public UserRepo(ProtectedLocalStorage storageService)
         {
             _storageService = storageService;
             _userDB = new UserDB();
-            userDTO = new();
         }
 
         public async Task<bool> UserLogin(UsersDTO userDTO)
@@ -40,6 +39,18 @@ namespace Blazor.Repository
             await _storageService.DeleteAsync(LoginToken);
 
             return true;
+        }
+
+        public async Task<bool> CreateUser(Users user)
+        {
+            var result = await _userDB.CreateUser(user);
+
+            if (result == true)
+            {
+                return true;
+            }
+
+            return false;
         }
 
     }

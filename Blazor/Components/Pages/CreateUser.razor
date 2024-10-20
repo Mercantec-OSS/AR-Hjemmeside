@@ -9,9 +9,9 @@
 
 <h1>Upload Test</h1>
 
-<EditForm Model="newUser" OnValidSubmit="SubmitForm">
+<EditForm Model="newUser" OnValidSubmit="CreateNewUser">
     <div>
-        <label for="userName"> BrugerNavn: </label>
+        <label for="userName"> Brugernavn: </label>
         <InputText id="username" class="form-control" @bind-Value="newUser.UserName" />
     </div>
     <div>
@@ -27,19 +27,9 @@
         <InputText id="password" class="form-control" @bind-Value="newUser.Password" />
     </div>
     <div>
-        <label for="profilePicture"> Profil Billede: </label>
-        <InputFile OnChange="@LoadFiles" class="form-control" accept=".png,.jpg,.jpeg,.glb" />
+        <label for="Email"> Email: </label>
+        <InputText id="email" class="form-control" @bind-Value="newUser.Email" />
     </div>
     <button class="btn btn-primary mt-3" type="submit"> Opret Profil </button>
 </EditForm>
 
-@if (errors.Count > 0)
-{
-    <h2>Errors</h2>
-    <ul class="text-danger">
-        @foreach (var error in errors)
-        {
-            <li>@error</li>
-        }
-    </ul>
-}

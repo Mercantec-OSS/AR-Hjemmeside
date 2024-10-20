@@ -32,23 +32,7 @@
                     <td>@c.Email</td>
                     <td>@c.Password</td>
                     <td>@c.Role</td>
-                    <td>
-                        @if (string.IsNullOrWhiteSpace(c.FileName) == false)
-                        {
-                            var extension = Path.GetExtension(c.FileName);
-                            if (extension == ".png" || extension == ".jpg" || extension == ".jpeg")
-                            {
-                                <img src="@CreateWebPath(c.FileName)" />
-                            }
-                            else if (extension == ".glb")
-                            {
-                                var webPath = CreateWebPath(c.FileName);
-                                <p>GLB Path: @webPath</p> <!-- Debug output -->
-                                <model-viewer src="@webPath" camera-controls style="width: 100%; height: 100%;"></model-viewer>
-                            }
-                        }
-                    </td>
-                    <td>@c.FileName</td>
+                    
                     <td>@c.UserName</td>
                     <button>Edit user</button>
                 </tr>
